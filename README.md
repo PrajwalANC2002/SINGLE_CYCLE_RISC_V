@@ -89,11 +89,11 @@ The RISC CPU Lite consists of multiple components including:
 | **EQ**     | 0D               | 0-7          | 0-7          | 0-7          | -      | OUT = OP1 == OP2 |
 
 #### Flow:
-| Field      | Opcode (8 bits) | REG (4 bits) | REG (4 bits) | REG (4 bits) | ADDR (12 bits) | Operation |
-|------------|-----------------|--------------|--------------|--------------|----------------|-----------|
-| **JMP**    | 0E               | -            | -            | -            | Address        | PC = PROG[ADDR] |
-| **JMP_IF_NE** | 0F               | -            | 0-7 (reg1)   | 0-7 (reg2)   | Address        | IF reg1 != reg2 THEN PC = PROG[ADDR] |
-| **HALT**   | FF               | -            | -            | -            | -              | End the program |
+| Field       | Opcode (8 bits) | REG (4 bits) | REG (4 bits) | REG (4 bits) | ADDR (12 bits) | Operation |
+|-------------|-----------------|--------------|--------------|--------------|----------------|-----------|
+| **JMP**     | 0E               | -            | -            | -            | Address        | PC = PROG[ADDR] |
+|**JMP_IF_NE**| 0F               | -            | 0-7 (reg1)   | 0-7 (reg2)   | Address        | IF reg1 != reg2 THEN PC = PROG[ADDR] |
+| **HALT**    | FF               | -            | -            | -            | -              | End the program |
 
 
 ### CPU Components
