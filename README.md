@@ -103,6 +103,40 @@ The RISC CPU Lite consists of multiple components including:
 - **Data Memory**: Stores data required for the load/store operations.
 - **Register File**: Stores intermediate results and operands.
 
+## Control Unit
+
+The Control Unit is the main part of the processor. It is responsible for controlling the select lines of multiplexers, forming the datapath for different instructions. The Control Unit takes the **opcode** obtained from the [31:24] bits of the instruction as input and generates the necessary control signals to drive the various operations in the processor.
+
+### Control Signals:
+- **mem_write**: Enables writing to memory.
+- **jmp**: Indicates a jump instruction.
+- **jmp_if**: Indicates a conditional jump.
+- **load_imm**: Loads immediate value into the register.
+- **load_indirect**: Loads data using indirect addressing.
+- **store_indirect**: Stores data using indirect addressing.
+- **mem_reg**: Controls whether data is written to the register from memory.
+- **alu_en**: Enables ALU operations.
+- **reg_write_en**: Enables writing to the register file.
+- **halt**: Stops the execution.
+
+### Control Signals Based on Instruction Type:
+
+| Instruction     | mem_write | jmp | jmp_if | load_imm | load_indirect | store_indirect | mem_reg | alu_en | reg_write_en | halt |
+|-----------------|-----------|-----|--------|----------|---------------|----------------|---------|--------|--------------|------|
+| **Load**        | 0         | 0   | 0      | 0        | 0             | 0              | 1       | 0      | 1            | 0    |
+| **Load Indirect**| 0         | 0   | 0      | 0        | 1             | 0              | 1       | 0      | 1            | 0    |
+| **Load Immediate**| 0       | 0   | 0      | 1        | 0             | 0              | 0       | 0      | 1            | 0    |
+| **Store**       | 1         | 0   | 0      | 0        | 0             | 0              | 0       | 0      | 0            | 0    |
+| **Store Indirect**| 1        | 0   | 0      | 0        | 0             | 1              | 0       | 0      | 0            | 0    |
+| **Arithmetic**  | 0         | 0   | 0      | 0        | 0             | 0              | 0       | 1      | 1            | 0    |
+| **Logic**       | 0         | 0   | 0      | 0        | 0             | 0              | 0       | 1      | 1            | 0    |
+| **Relational**  | 0         | 0   | 0      | 0        | 0             | 0              | 0       | 1      | 1            | 0    |
+| **Jump**        | 0         | 1   | 0      | 0        | 0             | 0              | 0       | 0      | 0            | 0    |
+| **Jump If**     | 0         | 0   | 1      | 0        | 0             | 0              | 0       | 1      | 0            | 0    |
+| **Halt**        | 0         | 0   | 0      | 0        | 0             | 0              | 0       | 0      | 0            | 1    |
+
+The Control Unit generates these signals based on the opcode and the instruction type. The signals are then sent to the relevant components in the datapath, such as the ALU, register file, or memory, to execute the instruction.
+
 ## Design Modifications
 - **Memory Write Enable**: The memory module has been simplified by using a single `mem_write` enable signal to determine when the data memory should perform write operations. Removing the separate `mem_read` signal improved resource utilization in FPGA synthesis, enabling the inference of block RAM rather than distributed RAM.
 
