@@ -1,4 +1,4 @@
-# RISC CPU Lite - Major Project
+# RISC CPU Lite for custom instruction set
 
 ## Problem Statement
 
@@ -15,7 +15,7 @@ The RISC CPU Lite consists of multiple components including:
 - **Program Counter (PC)**: Tracks the address of the next instruction to be executed.
 
 ### Clock Frequencies
-- Both the CPU and memory components work at **150 MHz**, simplifying the design to avoid clock domain crossing issues. Previously, the CPU operated at 150 MHz while memory was at 70 MHz.
+- Both the CPU and memory components work at **150 MHz**, simplifying the design.
 
 ## Specification
 
@@ -47,8 +47,6 @@ The RISC CPU Lite consists of multiple components including:
 - **Register File**: Stores intermediate results and operands.
 
 ## Design Modifications
-- **Single Clock Domain**: The entire CPU (both Program Memory and Data Memory) now operates at 150 MHz. This modification removes the need for clock domain crossing (CDC) handling, making the design simpler.
-  
 - **Memory Write Enable**: The memory module has been simplified by using a single `mem_write` enable signal to determine when the data memory should perform write operations. Removing the separate `mem_read` signal improved resource utilization in FPGA synthesis, enabling the inference of block RAM rather than distributed RAM.
 
 ## Project Flow
@@ -66,27 +64,9 @@ The RISC CPU Lite consists of multiple components including:
 - **Arithmetic Operations**: Addition, subtraction, multiplication, and bitwise operations work as expected.
 - **Control Flow**: Jump, Jump-if, and Halt instructions are verified for correct functionality.
 
-## Lint and CDC Verification
-
-### Lint Goals:
-- **lint_rtl**: Ensures basic connectivity and simulation correctness.
-- **lint_rtl_enhanced**: Covers additional structural and synthesis checks.
-
-**Errors Encountered:**
-- **Large Bus Handling**: The program and data memory have a large bus width (12-bit address). This was resolved by setting `handle_large_bus yes`.
-- **mthresh**: The memory size required adjusting the threshold in Spyglass using `set_option mthresh` for lint correctness.
-
-### Clock Domain Crossing (CDC)
-- CDC issues are no longer applicable since the system operates on a single 150 MHz clock.
-
 ## FPGA Synthesis and Deployment
 
 - **Data Memory Issue**: Initially, using two enable signals caused the memory to be inferred as distributed RAM, leading to high FPGA resource usage. The solution was to simplify the design to use only one enable signal (`mem_write`), resulting in the memory being inferred as Block RAM.
 
 - **JMP_IF Instruction**: A loop-based instruction was implemented for scenarios like repeated addition, enabling conditional branching based on register comparisons.
 
-## How to Run the Project
-
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
