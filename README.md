@@ -39,6 +39,63 @@ The RISC CPU Lite consists of multiple components including:
 - **Logical Operations**: AND, OR.
 - **Control Flow**: Jump, Jump-if, Halt.
 
+## Implementation of Requirement of the Problem Statement
+
+### Instruction Set:
+
+#### Load:
+| Field      | Opcode (8 bits) | REG (4 bits) | Unused | ADDR (12 bits)  | Operation |
+|------------|-----------------|--------------|--------|-----------------|-----------|
+| **Name**   | **LOAD (01)**    | 0-7          | -      | Address         | REG = DATA[ADDR] |
+
+#### Load Indirect:
+| Field      | Opcode (8 bits) | REG (4 bits) | ADDR_REG (4 bits) | Unused  | Operation |
+|------------|-----------------|--------------|-------------------|---------|-----------|
+| **Name**   | **LOAD_INDIRECT (02)** | 0-7 | 0-7 (register) | - | REG = DATA[ADDR_REG] |
+
+#### Load Immediate:
+| Field      | Opcode (8 bits) | REG (4 bits) | Unused | VALUE (12 bits) | Operation |
+|------------|-----------------|--------------|--------|-----------------|-----------|
+| **Name**   | **LOAD_IMM (03)** | 0-7         | -      | Value           | REG = VALUE |
+
+#### Store:
+| Field      | Opcode (8 bits) | Unused | REG (4 bits) | Unused | ADDR (12 bits) | Operation |
+|------------|-----------------|--------|--------------|--------|----------------|-----------|
+| **Name**   | **STORE (04)**   | -      | 0-7          | -      | Address        | DATA[ADDR] = REG |
+
+#### Store Indirect:
+| Field      | Opcode (8 bits) | Unused | REG (4 bits) | ADDR_REG (4 bits) | Unused | Operation |
+|------------|-----------------|--------|--------------|-------------------|--------|-----------|
+| **Name**   | **STORE_INDIRECT (05)** | - | 0-7 | 0-7 | - | DATA[ADDR_REG] = REG |
+
+#### Arithmetic (Unsigned Integer):
+| Field      | Opcode (8 bits) | OUT (4 bits) | OP1 (4 bits) | OP2 (4 bits) | Unused | Operation |
+|------------|-----------------|--------------|--------------|--------------|--------|-----------|
+| **ADD**    | 06               | 0-7          | 0-7          | 0-7          | -      | OUT = OP1 + OP2 |
+| **SUB**    | 07               | 0-7          | 0-7          | 0-7          | -      | OUT = OP1 - OP2 |
+| **MULTIPLY**| 08              | 0-7          | 0-7          | 0-7          | -      | OUT = OP1 * OP2 |
+
+#### Logic:
+| Field      | Opcode (8 bits) | OUT (4 bits) | OP1 (4 bits) | OP2 (4 bits) | Unused | Operation |
+|------------|-----------------|--------------|--------------|--------------|--------|-----------|
+| **AND**    | 09               | 0-7          | 0-7          | 0-7          | -      | OUT = OP1 & OP2 |
+| **OR**     | 0A               | 0-7          | 0-7          | 0-7          | -      | OUT = OP1 \| OP2 |
+| **NOT**    | 0B               | 0-7          | 0-7          | -            | -      | OUT = ~OP1 |
+
+#### Relational:
+| Field      | Opcode (8 bits) | OUT (4 bits) | OP1 (4 bits) | OP2 (4 bits) | Unused | Operation |
+|------------|-----------------|--------------|--------------|--------------|--------|-----------|
+| **CMP**    | 0C               | 0-7          | 0-7          | 0-7          | -      | OUT = OP1 > OP2 |
+| **EQ**     | 0D               | 0-7          | 0-7          | 0-7          | -      | OUT = OP1 == OP2 |
+
+#### Flow:
+| Field      | Opcode (8 bits) | REG (4 bits) | REG (4 bits) | REG (4 bits) | ADDR (12 bits) | Operation |
+|------------|-----------------|--------------|--------------|--------------|----------------|-----------|
+| **JMP**    | 0E               | -            | -            | -            | Address        | PC = PROG[ADDR] |
+| **JMP_IF** | 0F               | -            | 0-7 (reg1)   | 0-7 (reg2)   | Address        | IF reg1 == reg2 THEN PC = PROG[ADDR] |
+| **HALT**   | FF               | -            | -            | -            | -              | End the program |
+
+
 ### CPU Components
 - **Control Unit**: Decodes the instruction and generates control signals for other components.
 - **ALU**: Performs operations like addition, subtraction, bitwise AND, OR.
